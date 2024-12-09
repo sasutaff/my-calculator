@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>購入可能枚数の計算</title>
+</head>
+<body>
+    <h1>購入可能枚数の計算</h1>
+
+    <form id="calculatorForm">
+        <label for="capital">資金（USD）:</label>
+        <input type="number" id="capital" value="100" required><br>
+
+        <label for="entry">エントリーポイント:</label>
+        <input type="number" id="entry" value="2500" required><br>
+
+        <label for="sl">SL:</label>
+        <input type="number" id="sl" value="2300" required><br>
+
+        <label for="lossRate">許容損失率（％）:</label>
+        <input type="number" id="lossRate" value="10" required><br>
+
+        <button type="button" onclick="calculate()">計算</button>
+    </form>
+
+    <h2>結果</h2>
+    <p><strong>最大損失額（USD）:</strong> <span id="maxLoss">0</span></p>
+    <p><strong>購入可能な枚数:</strong> <span id="maxAmount">0</span></p>
+    <p><strong>ポジションタイプ:</strong> <span id="positionType">ロング</span></p>
+
+    <script>
+        function calculate() {
+            // ユーザー入力の取得
+            const capital = parseFloat(document.getElementById("capital").value);
+            const entry = parseFloat(document.getElementById("entry").value);
+            const sl = parseFloat(document.getElementById("sl").value);
+            const lossRate = parseFloat(document.getElementById("lossRate").value);
+
+            // 最大損失額の計算
+            const maxLoss = (capital * lossRate) / 100;
+            document.getElementById("maxLoss").textContent = maxLoss.toFixed(2);
+
+            // 損失幅の計算（ロングかショートによって切り替え）
+            const lossWidth = (entry > sl) ? (entry - sl) : (sl - entry);
+
+            // 購入可能な枚数の計算
+            const maxAmount = (maxLoss / lossWidth).toFixed(3);
+            document.getElementById("maxAmount").textContent = maxAmount;
+
+            // ポジションタイプの表示（ロングかショート）
+            const positionType = entry > sl ? "ロング" : "ショート";
+            document.getElementById("positionType").textContent = positionType;
+        }
+    </script>
+</body>
+</html>
